@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
     private void HandleMove(float _dir)
     {
         //dir is -1 when a is pressed and 1 when d is pressed
-        Debug.Log(_dir);
         dir = _dir;
     }
 
@@ -101,6 +100,7 @@ public class PlayerController : MonoBehaviour
         else if (col.gameObject.CompareTag("IslandArea"))
         {
             inputReader.SetVoidMovement();
+            if (gameObject.activeSelf)
             StartCoroutine(lerpOrthoSize(false));
         }
     }
