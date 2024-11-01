@@ -25,7 +25,7 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
         }
     }
 
-    private void SetIslandMovement()
+    public void SetIslandMovement()
     {
         inputMap.IslandMovement.Enable();
         inputMap.VoidMovement.Disable();
@@ -35,7 +35,7 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
         menuMode = false;
     }
 
-    private void SetVoidMovement()
+    public void SetVoidMovement()
     {
         inputMap.IslandMovement.Disable();
         inputMap.VoidMovement.Enable();
@@ -45,7 +45,7 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
         menuMode = false;
     }
 
-    private void SetMenuMode()
+    public void SetMenuMode()
     {
         inputMap.IslandMovement.Disable();
         inputMap.VoidMovement.Disable();
