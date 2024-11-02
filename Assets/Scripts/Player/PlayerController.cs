@@ -93,15 +93,15 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col != null)
-        {
-            if (col.gameObject.CompareTag("Interactable"))
+        if (col == null) return;
+
+        if (col.gameObject.CompareTag("Interactable"))
             interactObject = col.gameObject;
-            else if (col.gameObject.CompareTag("IslandArea"))
-            {
-                inputReader.SetIslandMovement();
-                StartCoroutine(lerpOrthoSize(true));
-            }
+        else if (col.gameObject.CompareTag("IslandArea"))
+        {
+            inputReader.SetIslandMovement();
+            StartCoroutine(lerpOrthoSize(true));
+            GameManager.instance.HidePointer();
         }
     }
 
@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Interactable"))
         interactObject = null;
-        else if (col.gameObject.CompareTag("IslandArea"))
+        else if (col.gameObject.CompareTag("IslandExit"))
         {
             inputReader.SetVoidMovement();
             if (gameObject.activeSelf)
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!inputReader.voidMode)
         {
-            if (rb.velocity.x > 0.1f)
+            if (rb.velocity.x > 0.1f || rb.velocity.x < -0.1f)
             {
                 animator.Play(walkAnim.name);
             }
