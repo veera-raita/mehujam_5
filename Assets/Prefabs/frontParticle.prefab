@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3385257134450820845}
   - component: {fileID: 7699315351186318449}
   - component: {fileID: 1289640866363797111}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: frontParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
