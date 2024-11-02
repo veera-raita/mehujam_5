@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, InputMap.IVoidMovementActions, InputMap.IMenuMapActions
 {
     private InputMap inputMap;
-    public bool islandMode { get; private set; } = true;
+    public bool islandMode { get; private set; } = false;
     public bool voidMode { get; private set; } = false;
     public bool menuMode { get; private set; } = false;
 
@@ -20,6 +20,9 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
 
             inputMap.IslandMovement.SetCallbacks(this);
             inputMap.VoidMovement.SetCallbacks(this);
+            inputMap.IslandMovement.Disable();
+            inputMap.VoidMovement.Disable();
+            inputMap.MenuMap.Disable();
         }
     }
 

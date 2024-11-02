@@ -126,7 +126,10 @@ public class PlayerController : MonoBehaviour
             else if (rb.velocity.x > 0 && !facingRight) CarFlipper();
         }
         else if (inputReader.voidMode)
-        rb.velocity = new Vector2(voidSpeed, rb.velocity.y);
+        {
+            rb.velocity = new Vector2(voidSpeed, rb.velocity.y);
+            if (!facingRight) CarFlipper();
+        }
     }
 
     private void AnimationHandler()
