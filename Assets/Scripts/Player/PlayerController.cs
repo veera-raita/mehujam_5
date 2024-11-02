@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [Header("Const Variables")]
     private const float speed = 3f;
     private const float voidSpeed = 1.5f;
-    private const float baseJumpForce = 10f;
+    private const float baseJumpForce = 3f;
     private const float interactRange = 5f;
     private const float islandOrthoSize = 3.5f;
     private const float voidOrthoSize = 5f;
