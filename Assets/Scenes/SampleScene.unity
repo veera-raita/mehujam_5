@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 143045152}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb464a47d33d7c746a1b8486d8119fe2, type: 3}
+  m_Script: {fileID: 11500000, guid: b97968492384cc541abb2870dac65558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &148059871
@@ -2169,7 +2169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &387192568
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8097,7 +8097,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d3464b27d19ece944ac3cf0936eb8ac8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8146,6 +8146,7 @@ MonoBehaviour:
   walkAnim: {fileID: 7400000, guid: 0aa45580465dfad47a79e9c8b47fe5b1, type: 2}
   fallAnim: {fileID: 7400000, guid: 4c338a29f1d68f941b27dbebb8f46543, type: 2}
   jumpAnim: {fileID: 7400000, guid: 8fd45d42d277ea74db57917d919b8864, type: 2}
+  interacted: 0
 --- !u!58 &1439562415
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -9964,7 +9965,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 703eddee45d2b1148bec346aca313f8c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
