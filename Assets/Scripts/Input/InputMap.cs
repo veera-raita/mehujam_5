@@ -53,6 +53,15 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""2edae479-657a-4226-b848-0985f5a2c9ba"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -119,6 +128,17 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c269eb82-3ddb-4b97-8025-4faf3559dca1"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -252,6 +272,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_IslandMovement_Move = m_IslandMovement.FindAction("Move", throwIfNotFound: true);
         m_IslandMovement_Use = m_IslandMovement.FindAction("Use", throwIfNotFound: true);
         m_IslandMovement_Click = m_IslandMovement.FindAction("Click", throwIfNotFound: true);
+        m_IslandMovement_Mouse = m_IslandMovement.FindAction("Mouse", throwIfNotFound: true);
         // VoidMovement
         m_VoidMovement = asset.FindActionMap("VoidMovement", throwIfNotFound: true);
         m_VoidMovement_Jump = m_VoidMovement.FindAction("Jump", throwIfNotFound: true);
@@ -323,6 +344,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_IslandMovement_Move;
     private readonly InputAction m_IslandMovement_Use;
     private readonly InputAction m_IslandMovement_Click;
+    private readonly InputAction m_IslandMovement_Mouse;
     public struct IslandMovementActions
     {
         private @InputMap m_Wrapper;
@@ -330,6 +352,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_IslandMovement_Move;
         public InputAction @Use => m_Wrapper.m_IslandMovement_Use;
         public InputAction @Click => m_Wrapper.m_IslandMovement_Click;
+        public InputAction @Mouse => m_Wrapper.m_IslandMovement_Mouse;
         public InputActionMap Get() { return m_Wrapper.m_IslandMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -348,6 +371,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
+            @Mouse.started += instance.OnMouse;
+            @Mouse.performed += instance.OnMouse;
+            @Mouse.canceled += instance.OnMouse;
         }
 
         private void UnregisterCallbacks(IIslandMovementActions instance)
@@ -361,6 +387,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
+            @Mouse.started -= instance.OnMouse;
+            @Mouse.performed -= instance.OnMouse;
+            @Mouse.canceled -= instance.OnMouse;
         }
 
         public void RemoveCallbacks(IIslandMovementActions instance)
@@ -483,6 +512,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnUse(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnMouse(InputAction.CallbackContext context);
     }
     public interface IVoidMovementActions
     {

@@ -2169,7 +2169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &387192568
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2212,9 +2212,10 @@ MonoBehaviour:
   m_text: 'While on islands:
 
 
-    Press A & D to move
+    a = left, d = right, space interacts
 
-    Space to interact'
+    you
+    can also do both with mouse'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f5b7b64d3cd26674899ca03963af5875, type: 2}
   m_sharedMaterial: {fileID: 772037881133361944, guid: f5b7b64d3cd26674899ca03963af5875, type: 2}
@@ -6489,9 +6490,10 @@ MonoBehaviour:
   m_text: 'While on islands:
 
 
-    Press A & D to move
+    a = left, d = right, space interacts
 
-    Space to interact'
+    you
+    can also do both with mouse'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 36ab11ac82d2b0e41a1c8113e8181662, type: 2}
   m_sharedMaterial: {fileID: 772037881133361944, guid: 36ab11ac82d2b0e41a1c8113e8181662, type: 2}

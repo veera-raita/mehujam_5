@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private const float orthoTransitionTime = 1f;
 
     [Header("Dynamic Variables")]
+    private Vector2 mousePos;
     private float realJumpForce = baseJumpForce;
     private int jumpUpgrades = 0;
     public bool facingRight { get; private set; } = true;
@@ -39,11 +40,15 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     public int currency { get; private set; } = 0;
 
     [Header("State Variables")]
+    private float moveTo = 0f;
+    private bool clicked = false;
+    private bool clickMoving = false;
     private float dir = 0f;
 
     private void Awake()
     {
         inputReader.MoveEvent += HandleMove;
+        inputReader.MouseEvent += MouseMove;
         inputReader.JumpEvent += Jump;
         inputReader.UseEvent += Use;
         inputReader.ClickEvent += Click;
@@ -56,10 +61,17 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     {
         //dir is -1 when a is pressed and 1 when d is pressed
         dir = _dir;
+        clickMoving = false;
+    }
+
+    private void MouseMove(Vector2 _pos)
+    {
+        mousePos = _pos;
     }
 
     private void Jump()
     {
+        Debug.Log("jumped, or so they say");
         rb.AddForce(Vector2.up * realJumpForce, ForceMode2D.Impulse);
         jumping = true;
         if (jumpTimer != null) StopCoroutine(jumpTimer);
@@ -79,7 +91,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void ClickCanceled()
     {
-
+        clickMoving = true;
+        clicked = true;
+        moveTo = Camera.main.ScreenToWorldPoint(mousePos).x;
     }
 
     private void Scroll(float _dir)
@@ -129,7 +143,25 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         {
             rb.velocity = new Vector2(voidSpeed, rb.velocity.y);
             if (!facingRight) CarFlipper();
+            clickMoving = false;
         }
+    }
+
+    private void ClickMove()
+    {
+        float playerX = transform.position.x;
+        if (moveTo < playerX && moveTo - playerX < -0.1f)
+        {
+            rb.velocity = new Vector2(-speed, transform.position.y);
+            if (facingRight) CarFlipper();
+        }
+        else if (moveTo > playerX && moveTo - playerX > 0.1f)
+        {
+            rb.velocity = new Vector2(speed, transform.position.y);
+            if (!facingRight) CarFlipper();
+        }
+        else clickMoving = false;
+        clicked = false;
     }
 
     private void AnimationHandler()
@@ -212,7 +244,10 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     void Update()
     {
         if (!GameManager.instance.introRunning)
-        Move();
+        {
+            if (clickMoving) ClickMove();
+            else Move();
+        }
         AnimationHandler();
     }
 
