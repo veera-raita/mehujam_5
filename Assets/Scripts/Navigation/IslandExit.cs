@@ -10,11 +10,15 @@ public class IslandExit : MonoBehaviour
     private void OnTriggerExit2D(Collider2D col)
     {
         if (col == null) return;
-        if (calledOnce) return;
         if (col.gameObject.CompareTag("Player"))
         {
+            if (!calledOnce)
+            {
+                GameManager.instance.SaveLastIsland(leavingIslandNumber);
+                calledOnce = true;
+                DataPersistenceManager.instance.SaveGame();
+            }
             GameManager.instance.UpdatePointer(leavingIslandNumber);
-            calledOnce = true;
         }
     }
 }

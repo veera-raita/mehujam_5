@@ -15,6 +15,7 @@ public class IslandEnter : MonoBehaviour
         {
             stopper.SetActive(true);
             calledOnce = true;
+            DataPersistenceManager.instance.SaveGame();
         }
     }
 }

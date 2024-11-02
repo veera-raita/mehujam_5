@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IDataPersistence
 {
     [Header("Engine Variables")]
     [SerializeField] private GameObject player;
@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject pointTo { get; private set; }
     [SerializeField] private GameObject pointer;
     [SerializeField] private InputReader reader;
+    private int lastIsland = 0;
 
     [Header("Tutorial Objects")]
     [SerializeField] private GameObject fadeInPanel;
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tut2BG;
     [SerializeField] private TextMeshProUGUI tut3;
     [SerializeField] private TextMeshProUGUI tut3BG;
-    private bool introRunning = true;
+    public bool introRunning { get; private set; } = true;
     private Coroutine tutorial = null;
     private bool tutPlayed = false;
     private bool tutRunning = false;
@@ -189,8 +190,24 @@ public class GameManager : MonoBehaviour
         pointTo = GameManager.instance.islandPointers[_islandNumber];
     }
 
+    public void SaveLastIsland(int _islandNumber)
+    {
+        lastIsland = _islandNumber;
+    }
+
     public void HidePointer()
     {
         pointer.SetActive(false);
+    }
+
+    public void LoadData(GameData data)
+    {
+        reader.SetIslandMovement();
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        if (lastIsland != 0)
+        data.position = islandPointers[lastIsland-1].transform.position;
     }
 }
