@@ -20,8 +20,6 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
 
             inputMap.IslandMovement.SetCallbacks(this);
             inputMap.VoidMovement.SetCallbacks(this);
-
-            SetIslandMovement();
         }
     }
 
