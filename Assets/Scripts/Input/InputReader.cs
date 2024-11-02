@@ -58,6 +58,7 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
 
     //EVENTS
     public event Action<float> MoveEvent;
+    public event Action<Vector2> MouseEvent;
     public event Action UseEvent;
     public event Action ClickEvent;
     public event Action ClickCanceledEvent;
@@ -80,6 +81,11 @@ public class InputReader : ScriptableObject, InputMap.IIslandMovementActions, In
     public void OnMove(InputAction.CallbackContext context)
     {
         MoveEvent?.Invoke(obj:context.ReadValue<float>());
+    }
+
+    public void OnMouse(InputAction.CallbackContext context)
+    {
+        MouseEvent?.Invoke(obj:context.ReadValue<Vector2>());
     }
 
     public void OnUse(InputAction.CallbackContext context)
