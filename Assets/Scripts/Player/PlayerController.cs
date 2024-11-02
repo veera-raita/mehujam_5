@@ -4,7 +4,7 @@ using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDataPersistence
 {
     [Header("Engine Stuff")]
     [SerializeField] private InputReader inputReader;
@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private int jumpUpgrades = 0;
     public bool facingRight { get; private set; } = true;
     private bool jumping;
+    public int currency { get; private set; } = 0;
 
     [Header("State Variables")]
     private float dir = 0f;
@@ -112,7 +113,6 @@ public class PlayerController : MonoBehaviour
         else if (col.gameObject.CompareTag("IslandExit"))
         {
             inputReader.SetVoidMovement();
-            if (gameObject.activeSelf)
             StartCoroutine(lerpOrthoSize(false));
         }
     }
@@ -211,7 +211,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.introRunning)
         Move();
         AnimationHandler();
+    }
+
+    public void LoadData(GameData data)
+    {
+        transform.position = data.position;
+        currency = data.currency;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.currency = currency;
     }
 }
