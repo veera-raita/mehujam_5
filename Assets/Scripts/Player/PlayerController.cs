@@ -14,6 +14,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera cam;
     private GameObject interactObject;
 
+    [Header("Animation Stuff")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private AnimationClip idleAnim;
+    [SerializeField] private AnimationClip walkAnim;
+    [SerializeField] private AnimationClip fallAnim;
+    [SerializeField] private AnimationClip jumpAnim;
+    private Coroutine jumpTimer;
+
     [Header("Const Variables")]
     private const float speed = 3f;
     private const float voidSpeed = 1.5f;
@@ -27,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private float realJumpForce = baseJumpForce;
     private int jumpUpgrades = 0;
     public bool facingRight { get; private set; } = true;
+    private bool jumping;
 
     [Header("State Variables")]
     private float dir = 0f;
@@ -51,6 +60,9 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         rb.AddForce(Vector2.up * realJumpForce, ForceMode2D.Impulse);
+        jumping = true;
+        if (jumpTimer != null) StopCoroutine(jumpTimer);
+        jumpTimer = StartCoroutine(JumpTimer());
     }
 
     private void Use()
@@ -117,6 +129,38 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(voidSpeed, rb.velocity.y);
     }
 
+    private void AnimationHandler()
+    {
+        if (!inputReader.voidMode)
+        {
+            if (rb.velocity.x > 0.1f)
+            {
+                animator.Play(walkAnim.name);
+            }
+            else
+            {
+                animator.Play(idleAnim.name);
+            }
+        }
+        else
+        {
+            if (jumping)
+            {
+                animator.Play(jumpAnim.name);
+            }
+            else
+            {
+                animator.Play(fallAnim.name);
+            }
+        }
+    }
+
+    private IEnumerator JumpTimer()
+    {
+        yield return new WaitForSeconds (jumpAnim.length * 3);
+        jumping = false;
+    }
+
     private void CarFlipper()
     {
         if (facingRight)
@@ -165,5 +209,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
+        AnimationHandler();
     }
 }
