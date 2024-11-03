@@ -364,7 +364,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         else if (choice == 2 && filterUpgrades > activeFilterUpgrades)
         {
             activeFilterUpgrades++;
-            realHealthDrain = baseHealthDrain + filterUpgradeEffect * activeFilterUpgrades;
+            realHealthDrain = baseHealthDrain - filterUpgradeEffect * activeFilterUpgrades;
         }
         else if (choice == 3 && intakeUpgrades > activeIntakeUpgrades)
         {
@@ -382,7 +382,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         else if (choice == 2 && activeFilterUpgrades > 0)
         {
             activeFilterUpgrades--;
-            realHealthDrain = baseHealthDrain + filterUpgradeEffect * activeFilterUpgrades;
+            realHealthDrain = baseHealthDrain - filterUpgradeEffect * activeFilterUpgrades;
         }
         else if (choice == 3 && activeIntakeUpgrades > 0)
         {

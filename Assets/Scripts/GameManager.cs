@@ -198,11 +198,11 @@ public class GameManager : MonoBehaviour, IDataPersistence
         while (takenTime < tutFadeTime)
         {
             takenTime += Time.deltaTime;
-            fadeOutImg.color = new Color(0, 0, 0, takenTime / fadeInTime);
-            titleOut.color = new Color(0, 0, 0, takenTime / fadeInTime);
-            titleOutBG.color = new Color(1, 1, 1, takenTime / fadeInTime);
-            prompt.color = new Color(0, 0, 0, takenTime / fadeInTime);
-            promptBG.color = new Color(1, 1, 1, takenTime / fadeInTime);
+            fadeOutImg.color = new Color(0, 0, 0, takenTime / tutFadeTime);
+            titleOut.color = new Color(0, 0, 0, takenTime / tutFadeTime);
+            titleOutBG.color = new Color(1, 1, 1, takenTime / tutFadeTime);
+            prompt.color = new Color(0, 0, 0, takenTime / tutFadeTime);
+            promptBG.color = new Color(1, 1, 1, takenTime / tutFadeTime);
             yield return null;
         }
     }
