@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,9 +31,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private const float voidSpeed = 1.5f;
     private const float baseJumpForce = 3f;
     private const float jumpUpgradeAmount = 0.5f;
+    private const float basePickupRange = 0.85f;
+    private const float increasePickupRadAmount = 0.15f;
     public const int maxHealth = 100;
     //drain health will take deltatime into account
-    private const int drainHealthAmount = 5;
+    private const int baseHealthDrain = 5;
+    private const float filterUpgradeEffect = 0.8f;
     private const float interactRange = 5f;
     private const float islandOrthoSize = 3.5f;
     private const float voidOrthoSize = 5f;
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private Vector2 mousePos;
     private float realJumpForce = baseJumpForce;
     public float currentHealth { get; private set; } = maxHealth;
+    private float realHealthDrain = baseHealthDrain;
     public int jumpUpgrades { get; private set; } = 0;
     public int activeJumpUpgrades { get; private set; } = 0;
     public int filterUpgrades { get; private set; } = 0;
@@ -308,6 +311,11 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     public void Heal(int _healAmount)
     {
+        if (currentHealth + _healAmount >= 105)
+        {
+            currentHealth = 105;
+        }
+        else
         currentHealth += _healAmount;
     }
 
@@ -323,7 +331,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void DrainHealth()
     {
-        currentHealth -= drainHealthAmount * Time.deltaTime;
+        currentHealth -= realHealthDrain * Time.deltaTime;
     }
 
     public void ResetHealth()
@@ -356,10 +364,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         else if (choice == 2 && filterUpgrades > activeFilterUpgrades)
         {
             activeFilterUpgrades++;
+            realHealthDrain = baseHealthDrain + filterUpgradeEffect * activeFilterUpgrades;
         }
         else if (choice == 3 && intakeUpgrades > activeIntakeUpgrades)
         {
             activeIntakeUpgrades++;
+            pickupCollider.radius = basePickupRange + activeFilterUpgrades * increasePickupRadAmount;
         }
     }
 
@@ -372,10 +382,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         else if (choice == 2 && activeFilterUpgrades > 0)
         {
             activeFilterUpgrades--;
+            realHealthDrain = baseHealthDrain + filterUpgradeEffect * activeFilterUpgrades;
         }
         else if (choice == 3 && activeIntakeUpgrades > 0)
         {
             activeIntakeUpgrades--;
+            pickupCollider.radius = basePickupRange + activeFilterUpgrades * increasePickupRadAmount;
         }
     }
 

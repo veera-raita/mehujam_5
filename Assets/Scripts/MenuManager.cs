@@ -57,19 +57,31 @@ public class MenuManager : MonoBehaviour
     {
         shopUI.SetActive(true);
         inputReader.SetMenuMode();
-        if (!_boost)buyBoost.interactable = true;
+        if (!_boost)
+        {
+            buyBoost.interactable = true;
+            boughtBoost.SetActive(false);
+        }
         else
         {
             buyBoost.interactable = false;
             boughtBoost.SetActive(true);
         }
-        if (!_filter) buyFilter.interactable = true;
+        if (!_filter)
+        {
+            buyFilter.interactable = true;
+            boughtFilter.SetActive(false);
+        }
         else 
         {
             buyFilter.interactable = false;
             boughtFilter.SetActive(true);
         }
-        if (!_intake) buyIntake.interactable = true;
+        if (!_intake)
+        {
+            buyIntake.interactable = true;
+            boughtIntake.SetActive(false);
+        }
         else
         {
             buyIntake.interactable = false;

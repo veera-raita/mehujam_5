@@ -61,16 +61,6 @@ public class DataPersistenceManager : MonoBehaviour
         dataHandler.Save(gameData);
     }
 
-    //REMOVE THIS FOR RELEASE
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            dataHandler.DeleteData();
-            LoadGame();
-        }
-    }
-
     private List<IDataPersistence> FindAllDataPersistences()
     {
         IEnumerable<IDataPersistence> dataPersistences = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();

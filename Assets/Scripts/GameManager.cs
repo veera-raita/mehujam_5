@@ -27,6 +27,12 @@ public class GameManager : MonoBehaviour, IDataPersistence
     [SerializeField] private TextMeshProUGUI tut2BG;
     [SerializeField] private TextMeshProUGUI tut3;
     [SerializeField] private TextMeshProUGUI tut3BG;
+    [SerializeField] private GameObject outroPanel;
+    private Image fadeOutImg;
+    [SerializeField] private TextMeshProUGUI titleOut;
+    [SerializeField] private TextMeshProUGUI titleOutBG;
+    [SerializeField] private TextMeshProUGUI prompt;
+    [SerializeField] private TextMeshProUGUI promptBG;
     [SerializeField] private Image muteButtonUI;
     [SerializeField] private Sprite muteImg;
     [SerializeField] private Sprite playImg;
@@ -54,6 +60,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
         else
         instance = this;
         fadeInImg = fadeInPanel.GetComponent<Image>();
+        fadeOutImg = outroPanel.GetComponent<Image>();
         playerController = player.GetComponent<PlayerController>();
 
         StartCoroutine(LoadIn());
@@ -182,6 +189,22 @@ public class GameManager : MonoBehaviour, IDataPersistence
         tut3BG.gameObject.SetActive(false);
 
         tutPlayed = true;
+    }
+
+    public IEnumerator PlayOutro()
+    {
+        float takenTime = 0;
+        outroPanel.SetActive(true);
+        while (takenTime < tutFadeTime)
+        {
+            takenTime += Time.deltaTime;
+            fadeOutImg.color = new Color(0, 0, 0, takenTime / fadeInTime);
+            titleOut.color = new Color(0, 0, 0, takenTime / fadeInTime);
+            titleOutBG.color = new Color(1, 1, 1, takenTime / fadeInTime);
+            prompt.color = new Color(0, 0, 0, takenTime / fadeInTime);
+            promptBG.color = new Color(1, 1, 1, takenTime / fadeInTime);
+            yield return null;
+        }
     }
 
     private void RotatePointer()
