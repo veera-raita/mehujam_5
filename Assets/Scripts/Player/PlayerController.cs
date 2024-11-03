@@ -39,7 +39,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private Vector2 mousePos;
     private float realJumpForce = baseJumpForce;
     private float currentHealth = maxHealth;
-    private int jumpUpgrades = 0;
+    public int jumpUpgrades { get; private set; } = 0;
+    public int activeJumpUpgrades { get; private set; } = 0;
+    public int filterUpgrades { get; private set; } = 0;
+    public int activeFilterUpgrades { get; private set; } = 0;
+    public int intakeUpgrades { get; private set; } = 0;
+    public int activeIntakeUpgrades { get; private set; } = 0;
     public int currency { get; private set; } = 0;
 
     [Header("State Variables")]
@@ -78,7 +83,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private void Jump()
     {
         Debug.Log("jumped, or so they say");
-        rb.AddForce(Vector2.up * (realJumpForce + jumpUpgrades * jumpUpgradeAmount), ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * (realJumpForce + activeJumpUpgrades * jumpUpgradeAmount), ForceMode2D.Impulse);
         jumping = true;
         if (jumpTimer != null) StopCoroutine(jumpTimer);
         jumpTimer = StartCoroutine(JumpTimer());
@@ -280,6 +285,54 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currentHealth = maxHealth;
     }
 
+    public void AddUpgrade(int choice)
+    {
+        if (choice == 1)
+        {
+            jumpUpgrades++;
+        }
+        else if (choice == 2)
+        {
+            filterUpgrades++;
+        }
+        else if (choice == 3)
+        {
+            intakeUpgrades++;
+        }
+    }
+
+    public void ActivateUpgrade(int choice)
+    {
+        if (choice == 1 && jumpUpgrades > activeJumpUpgrades)
+        {
+            activeJumpUpgrades++;
+        }
+        else if (choice == 2 && filterUpgrades > activeFilterUpgrades)
+        {
+            activeFilterUpgrades++;
+        }
+        else if (choice == 3 && intakeUpgrades > activeIntakeUpgrades)
+        {
+            activeIntakeUpgrades++;
+        }
+    }
+
+    public void DeactivateUpgrade(int choice)
+    {
+        if (choice == 1 && activeJumpUpgrades > 0)
+        {
+            activeJumpUpgrades--;
+        }
+        else if (choice == 2 && activeFilterUpgrades > 0)
+        {
+            activeFilterUpgrades--;
+        }
+        else if (choice == 3 && activeIntakeUpgrades > 0)
+        {
+            activeIntakeUpgrades--;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -305,10 +358,22 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         transform.position = data.position;
         currency = data.currency;
         currentHealth = maxHealth;
+        this.activeJumpUpgrades = data.activeJumpUpgrades;
+        this.activeFilterUpgrades = data.activeFilterUpgrades;
+        this.activeIntakeUpgrades = data.activeIntakeUpgrades;
+        this.jumpUpgrades = data.jumpUpgrades;
+        this.filterUpgrades = data.filterUpgrades;
+        this.intakeUpgrades = data.intakeUpgrades;
     }
 
     public void SaveData(ref GameData data)
     {
         data.currency = currency;
+        data.activeJumpUpgrades = this.activeJumpUpgrades;
+        data.activeFilterUpgrades = this.activeFilterUpgrades;
+        data.activeIntakeUpgrades = this.activeIntakeUpgrades;
+        data.jumpUpgrades = this.jumpUpgrades;
+        data.filterUpgrades = this.filterUpgrades;
+        data.intakeUpgrades = this.intakeUpgrades;
     }
 }
