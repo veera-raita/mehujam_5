@@ -14,6 +14,7 @@ public class IslandExit : MonoBehaviour
         {
             if (!calledOnce)
             {
+                col.GetComponent<PlayerController>().ResetHealth();
                 GameManager.instance.SaveLastIsland(leavingIslandNumber);
                 calledOnce = true;
                 DataPersistenceManager.instance.SaveGame();

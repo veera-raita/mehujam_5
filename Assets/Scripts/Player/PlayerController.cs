@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private const float voidSpeed = 1.5f;
     private const float baseJumpForce = 3f;
     private const float jumpUpgradeAmount = 0.5f;
+    private const int maxHealth = 100;
+    //drain health will take deltatime into account
+    private const int drainHealthAmount = 5;
     private const float interactRange = 5f;
     private const float islandOrthoSize = 3.5f;
     private const float voidOrthoSize = 5f;
@@ -35,9 +38,8 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [Header("Dynamic Variables")]
     private Vector2 mousePos;
     private float realJumpForce = baseJumpForce;
+    private float currentHealth = maxHealth;
     private int jumpUpgrades = 0;
-    public bool facingRight { get; private set; } = true;
-    private bool jumping;
     public int currency { get; private set; } = 0;
 
     [Header("State Variables")]
@@ -45,6 +47,8 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private bool clickMoving = false;
     public bool interacted = false;
     private bool canInteract = false;
+    public bool facingRight { get; private set; } = true;
+    private bool jumping;
     private float dir = 0f;
 
     private void Awake()
@@ -255,6 +259,27 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         }
     }
 
+    public void Heal(int _healAmount)
+    {
+        currentHealth += _healAmount;
+    }
+
+    public void AddCurrency(int _toAdd)
+    {
+        currency += _toAdd;
+    }
+
+    private void DrainHealth()
+    {
+        currentHealth -= drainHealthAmount * Time.deltaTime;
+        Debug.Log($"draingang {currentHealth}");
+    }
+
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -269,6 +294,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             if (clickMoving) ClickMove();
             else Move();
         }
+        if (inputReader.voidMode) DrainHealth();
+        if (currentHealth <= 0) DataPersistenceManager.instance.LoadGame();
+
         AnimationHandler();
     }
 
@@ -276,6 +304,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     {
         transform.position = data.position;
         currency = data.currency;
+        currentHealth = maxHealth;
     }
 
     public void SaveData(ref GameData data)
