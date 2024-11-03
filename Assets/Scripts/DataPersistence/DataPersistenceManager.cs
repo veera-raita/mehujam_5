@@ -26,7 +26,7 @@ public class DataPersistenceManager : MonoBehaviour
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistences = FindAllDataPersistences();
         // LoadGame();
-        NewGame();
+        LoadGame();
     }
 
     private void NewGame()
@@ -59,6 +59,16 @@ public class DataPersistenceManager : MonoBehaviour
         }
         //save data to file using datahandler
         dataHandler.Save(gameData);
+    }
+
+    //REMOVE THIS FOR RELEASE
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            dataHandler.DeleteData();
+            LoadGame();
+        }
     }
 
     private List<IDataPersistence> FindAllDataPersistences()
