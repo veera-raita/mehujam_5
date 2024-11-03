@@ -202,11 +202,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public void LoadData(GameData data)
     {
         reader.SetIslandMovement();
+        tutPlayed = data.introPlayed;
     }
 
     public void SaveData(ref GameData data)
     {
         if (lastIsland != 0)
         data.position = islandPointers[lastIsland-1].transform.position;
+        data.introPlayed = tutPlayed;
     }
 }
