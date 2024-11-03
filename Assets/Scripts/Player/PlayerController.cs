@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [SerializeField] private CircleCollider2D pickupCollider;
     [SerializeField] private GameObject cameraFollowObject;
     [SerializeField] private CinemachineVirtualCamera cam;
-    private GameObject interactObject;
+    public GameObject interactObject { get; private set; }
 
     [Header("Animation Stuff")]
     [SerializeField] private Animator animator;
@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private const float speed = 3f;
     private const float voidSpeed = 1.5f;
     private const float baseJumpForce = 3f;
+    private const float jumpUpgradeAmount = 0.5f;
     private const float interactRange = 5f;
     private const float islandOrthoSize = 3.5f;
     private const float voidOrthoSize = 5f;
@@ -41,8 +42,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     [Header("State Variables")]
     private float moveTo = 0f;
-    private bool clicked = false;
     private bool clickMoving = false;
+    public bool interacted = false;
+    private bool canInteract = false;
     private float dir = 0f;
 
     private void Awake()
@@ -72,7 +74,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private void Jump()
     {
         Debug.Log("jumped, or so they say");
-        rb.AddForce(Vector2.up * realJumpForce, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * (realJumpForce + jumpUpgrades * jumpUpgradeAmount), ForceMode2D.Impulse);
         jumping = true;
         if (jumpTimer != null) StopCoroutine(jumpTimer);
         jumpTimer = StartCoroutine(JumpTimer());
@@ -80,20 +82,38 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void Use()
     {
-        if (interactObject == null) return;
-        interactObject.GetComponent<Interactable>().Interact();
+        if (!canInteract) return;
+        interacted = true;
     }
 
     private void Click()
     {
-
+        
     }
 
     private void ClickCanceled()
     {
-        clickMoving = true;
-        clicked = true;
-        moveTo = Camera.main.ScreenToWorldPoint(mousePos).x;
+        Vector2 worldPosMouse = Camera.main.ScreenToWorldPoint(mousePos);
+        if (canInteract)
+        {
+            Collider2D[] cols = Physics2D.OverlapPointAll(worldPosMouse);
+
+            if (cols.Length > 0)
+            {
+                foreach (Collider2D col in cols)
+                {
+                    if (col.gameObject.CompareTag("Interactable"))
+                    {
+                        interacted = true;
+                    }
+                }
+            }
+        }
+        if (!interacted)
+        {
+            clickMoving = true;
+            moveTo = worldPosMouse.x;
+        }
     }
 
     private void Scroll(float _dir)
@@ -111,7 +131,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         if (col == null) return;
 
         if (col.gameObject.CompareTag("Interactable"))
-            interactObject = col.gameObject;
+        canInteract = true;
         else if (col.gameObject.CompareTag("IslandArea"))
         {
             inputReader.SetIslandMovement();
@@ -122,8 +142,10 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void OnTriggerExit2D(Collider2D col)
     {
+        if (col == null) return;
+
         if (col.gameObject.CompareTag("Interactable"))
-        interactObject = null;
+        canInteract = false;
         else if (col.gameObject.CompareTag("IslandExit"))
         {
             inputReader.SetVoidMovement();
@@ -152,16 +174,15 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         float playerX = transform.position.x;
         if (moveTo < playerX && moveTo - playerX < -0.1f)
         {
-            rb.velocity = new Vector2(-speed, transform.position.y);
+            rb.velocity = new Vector2(-speed, rb.velocity.y);
             if (facingRight) CarFlipper();
         }
         else if (moveTo > playerX && moveTo - playerX > 0.1f)
         {
-            rb.velocity = new Vector2(speed, transform.position.y);
+            rb.velocity = new Vector2(speed, rb.velocity.y);
             if (!facingRight) CarFlipper();
         }
         else clickMoving = false;
-        clicked = false;
     }
 
     private void AnimationHandler()
