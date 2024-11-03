@@ -31,8 +31,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     private Image fadeOutImg;
     [SerializeField] private TextMeshProUGUI titleOut;
     [SerializeField] private TextMeshProUGUI titleOutBG;
-    [SerializeField] private TextMeshProUGUI prompt;
-    [SerializeField] private TextMeshProUGUI promptBG;
     [SerializeField] private Image muteButtonUI;
     [SerializeField] private Sprite muteImg;
     [SerializeField] private Sprite playImg;
@@ -201,8 +199,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
             fadeOutImg.color = new Color(0, 0, 0, takenTime / tutFadeTime);
             titleOut.color = new Color(0, 0, 0, takenTime / tutFadeTime);
             titleOutBG.color = new Color(1, 1, 1, takenTime / tutFadeTime);
-            prompt.color = new Color(0, 0, 0, takenTime / tutFadeTime);
-            promptBG.color = new Color(1, 1, 1, takenTime / tutFadeTime);
             yield return null;
         }
     }
