@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Unity.VisualScripting;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour, IDataPersistence
 {
@@ -12,6 +14,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [SerializeField] private CircleCollider2D pickupCollider;
     [SerializeField] private GameObject cameraFollowObject;
     [SerializeField] private CinemachineVirtualCamera cam;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip popCat;
+    [SerializeField] private AudioClip propel;
     public GameObject interactObject { get; private set; }
 
     [Header("Animation Stuff")]
@@ -27,7 +32,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private const float voidSpeed = 1.5f;
     private const float baseJumpForce = 3f;
     private const float jumpUpgradeAmount = 0.5f;
-    private const int maxHealth = 100;
+    public const int maxHealth = 100;
     //drain health will take deltatime into account
     private const int drainHealthAmount = 5;
     private const float interactRange = 5f;
@@ -38,7 +43,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     [Header("Dynamic Variables")]
     private Vector2 mousePos;
     private float realJumpForce = baseJumpForce;
-    private float currentHealth = maxHealth;
+    public float currentHealth { get; private set; } = maxHealth;
     public int jumpUpgrades { get; private set; } = 0;
     public int activeJumpUpgrades { get; private set; } = 0;
     public int filterUpgrades { get; private set; } = 0;
@@ -52,6 +57,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private bool clickMoving = false;
     public bool interacted = false;
     private bool canInteract = false;
+    private bool playingPropel = false;
     public bool facingRight { get; private set; } = true;
     private bool jumping;
     private float dir = 0f;
@@ -82,17 +88,19 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void Jump()
     {
-        Debug.Log("jumped, or so they say");
         rb.AddForce(Vector2.up * (realJumpForce + activeJumpUpgrades * jumpUpgradeAmount), ForceMode2D.Impulse);
         jumping = true;
         if (jumpTimer != null) StopCoroutine(jumpTimer);
         jumpTimer = StartCoroutine(JumpTimer());
+        playingPropel = true;
     }
 
     private void Use()
     {
         if (!canInteract) return;
         interacted = true;
+        clickMoving = false;
+        rb.velocity = Vector2.zero;
     }
 
     private void Click()
@@ -102,6 +110,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void ClickCanceled()
     {
+        bool clickedUI = false;
         Vector2 worldPosMouse = Camera.main.ScreenToWorldPoint(mousePos);
         if (canInteract)
         {
@@ -118,7 +127,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
                 }
             }
         }
-        if (!interacted)
+        if (!interacted && !clickedUI)
         {
             clickMoving = true;
             moveTo = worldPosMouse.x;
@@ -146,6 +155,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             inputReader.SetIslandMovement();
             StartCoroutine(lerpOrthoSize(true));
             GameManager.instance.HidePointer();
+            currentHealth = maxHealth;
         }
     }
 
@@ -158,6 +168,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         else if (col.gameObject.CompareTag("IslandExit"))
         {
             inputReader.SetVoidMovement();
+            if (this == null) return;
             StartCoroutine(lerpOrthoSize(false));
         }
     }
@@ -180,6 +191,12 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     private void ClickMove()
     {
+        if (!inputReader.islandMode)
+        {
+            clickMoving = false;
+            rb.velocity = Vector2.zero;
+            return;
+        }
         float playerX = transform.position.x;
         if (moveTo < playerX && moveTo - playerX < -0.1f)
         {
@@ -217,6 +234,31 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             {
                 animator.Play(fallAnim.name);
             }
+        }
+    }
+
+    private void AudioHandler()
+    {
+        bool playing = false;
+        if (inputReader.islandMode)
+        {
+            if (rb.velocity.x > 0.1 || rb.velocity.x < -0.1f)
+            {
+                audioSource.clip = popCat;
+                playing = true;
+            }
+        }
+        else if (jumping)
+        {
+            audioSource.clip = propel;
+            playing = true;
+        }
+        if (!playing) audioSource.Stop();
+        else if (playing && !audioSource.isPlaying)audioSource.Play();
+        else if (playingPropel)
+        {
+            audioSource.Play();
+            playingPropel = false;
         }
     }
 
@@ -274,10 +316,14 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currency += _toAdd;
     }
 
+    public void RemoveCurrency(int _remove)
+    {
+        currency -= _remove;
+    }
+
     private void DrainHealth()
     {
         currentHealth -= drainHealthAmount * Time.deltaTime;
-        Debug.Log($"draingang {currentHealth}");
     }
 
     public void ResetHealth()
@@ -333,10 +379,15 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         }
     }
 
+    public void ForceStopClickMovement()
+    {
+        clickMoving = false;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource.Play();
     }
 
     // Update is called once per frame
@@ -349,7 +400,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         }
         if (inputReader.voidMode) DrainHealth();
         if (currentHealth <= 0) DataPersistenceManager.instance.LoadGame();
-
+        AudioHandler();
         AnimationHandler();
     }
 

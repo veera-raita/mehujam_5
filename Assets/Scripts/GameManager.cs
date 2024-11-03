@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 {
     [Header("Engine Variables")]
     [SerializeField] private GameObject player;
+    private PlayerController playerController;
     [SerializeField] private GameObject[] islandPointers;
     public GameObject pointTo { get; private set; }
     [SerializeField] private GameObject pointer;
@@ -26,6 +27,12 @@ public class GameManager : MonoBehaviour, IDataPersistence
     [SerializeField] private TextMeshProUGUI tut2BG;
     [SerializeField] private TextMeshProUGUI tut3;
     [SerializeField] private TextMeshProUGUI tut3BG;
+    [SerializeField] private Image muteButtonUI;
+    [SerializeField] private Sprite muteImg;
+    [SerializeField] private Sprite playImg;
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioSource SFXSource;
+    private bool muted = false;
     public bool introRunning { get; private set; } = true;
     private Coroutine tutorial = null;
     private bool tutPlayed = false;
@@ -47,6 +54,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
         else
         instance = this;
         fadeInImg = fadeInPanel.GetComponent<Image>();
+        playerController = player.GetComponent<PlayerController>();
 
         StartCoroutine(LoadIn());
     }
@@ -180,7 +188,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
         Vector2 dir = (player.transform.position - pointTo.transform.position).normalized;
         float zRotation = Vector2.SignedAngle(Vector2.up, dir);
-        pointer.transform.rotation = Quaternion.Euler(0, 0, zRotation);
+        pointer.transform.rotation = Quaternion.Euler(0, 0, zRotation - 90);
     }
 
     public void UpdatePointer(int _islandNumber)
@@ -197,6 +205,26 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public void HidePointer()
     {
         pointer.SetActive(false);
+    }
+
+    public void ToggleMute()
+    {
+        playerController.ForceStopClickMovement();
+        //if muted, unmute
+        if (muted)
+        {
+            musicSource.mute = false;
+            SFXSource.mute = false;
+            muteButtonUI.sprite = playImg;
+            muted = false;
+        }
+        else
+        {
+            musicSource.mute = true;
+            SFXSource.mute = true;
+            muteButtonUI.sprite = muteImg;
+            muted = true;
+        }
     }
 
     public void LoadData(GameData data)
