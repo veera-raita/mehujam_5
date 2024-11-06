@@ -133,8 +133,30 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""44920c37-aba9-4e3a-b249-df61a4a79006"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""c269eb82-3ddb-4b97-8025-4faf3559dca1"",
                     ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48bee6c3-a180-4268-a336-82fb0541c8e3"",
+                    ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -174,6 +196,17 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""426e47e4-54e2-4789-aed3-cc1e794ed6e0"",
                     ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""07b5af47-a43c-4056-9ad1-9a0763ce52b4"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

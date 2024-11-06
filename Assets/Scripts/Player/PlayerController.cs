@@ -32,12 +32,11 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private const float baseJumpForce = 3f;
     private const float jumpUpgradeAmount = 0.5f;
     private const float basePickupRange = 0.85f;
-    private const float increasePickupRadAmount = 0.15f;
+    private const float increasePickupRadAmount = 0.25f;
     public const int maxHealth = 100;
     //drain health will take deltatime into account
     private const int baseHealthDrain = 5;
     private const float filterUpgradeEffect = 0.8f;
-    private const float interactRange = 5f;
     private const float islandOrthoSize = 3.5f;
     private const float voidOrthoSize = 5f;
     private const float orthoTransitionTime = 1f;
