@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,6 +16,7 @@ public class DataPersistenceManager : MonoBehaviour
         if (instance != null)
         {
             Debug.Log("Found more than one DataPersistenceManager");
+            Destroy(this);
         }
         else instance = this;
     }
@@ -25,7 +25,6 @@ public class DataPersistenceManager : MonoBehaviour
     {
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistences = FindAllDataPersistences();
-        // LoadGame();
         LoadGame();
     }
 

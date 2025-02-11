@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class IslandEnter : MonoBehaviour
@@ -9,8 +7,7 @@ public class IslandEnter : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col == null) return;
-        if (calledOnce) return;
+        if (col == null ||calledOnce) return;
         if (col.gameObject.CompareTag("Player"))
         {
             stopper.SetActive(true);
